@@ -1,0 +1,31 @@
+name: Aktualizacja grafiku Kraśnik
+
+on:
+  schedule:
+    - cron: "30 4 * * *"   # codziennie ok. 6:30 czasu polskiego
+  workflow_dispatch:         # pozwala uruchomić ręcznie (przycisk Run workflow)
+
+permissions:
+  contents: write
+
+jobs:
+  aktualizuj:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Pobierz grafik i zaktualizuj powiaty.json
+        run: python aktualizuj_krasnik.py
+      - name: Zatwierdź zmiany (jeśli są)
+        run: |
+          if git diff --quiet; then
+            echo "Brak zmian."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add powiaty.json
+            git commit -m "Aktualizacja grafiku dyżurów Kraśnik"
+            git push
+          fi
