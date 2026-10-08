@@ -10,9 +10,6 @@ URL = "https://samorzad.gov.pl/web/powiat-krasnicki/harmonogram-aptek"
 PLIK = "powiaty.json"
 MIASTO = "Kraśnik"
 DATA_RE = re.compile(r"(\d{1,2})\.(\d{1,2})\.(\d{4})")
-TEL_RE = re.compile(r"\(?\d{2}\)?[\s-]?\d{3}[\s-]?\d{2}[\s-]?\d{2}|\d{3}[\s-]\d{3}[\s-]\d{3}")
-GODZ_RE = re.compile(r"\b(do|od)\s+\d{1,2}[:.]\d{2}|\d{1,2}[:.]\d{2}\s*[–-]\s*\d{1,2}[:.]\d{2}")
-ADRES_RE = re.compile(r"\b(ul\.|al\.|pl\.|os\.)|\d+[A-Za-z]?(/\d+\w*)?\s*$")
 
 
 class Tabele(HTMLParser):
@@ -46,29 +43,56 @@ class Tabele(HTMLParser):
         self.tekst.append(data)
 
 
-def parsuj_wiersz(komorki):
-    m = DATA_RE.search(komorki[0])
+APTEKA_RE = re.compile(r"^(.*?)\s*(Kraśnik,\s*.+?)\s+tel\.?\s*(.+)$")
+ZNACZNIKI_NAZWY = re.compile(r"\s+(mgr\b|Sp\.|sp\.|S\.A\.|Grupa\b|Polska\b|Nova Grupa|\().*$", re.I)
+
+
+def cyfry(s):
+    return re.sub(r"\D", "", s)
+
+
+def normalizuj_godziny(s):
+    s = s.strip()
+    s = re.sub(r"\bdo\s+godz\.?\s*", "do ", s, flags=re.I)
+    s = re.sub(r"\s*:\s*", ":", s)            # "8 :00" -> "8:00"
+    s = re.sub(r"\s*[-–]\s*", "–", s)         # "8:00 - 23:00" -> "8:00–23:00"
+    return s.strip()
+
+
+def czysta_nazwa(surowa):
+    n = ZNACZNIKI_NAZWY.sub("", surowa).strip()
+    # "Apteka Nova Nova" -> "Apteka Nova"
+    slowa = n.split()
+    if len(slowa) >= 2 and slowa[-1].lower() == slowa[-2].lower():
+        slowa = slowa[:-1]
+    return " ".join(slowa)
+
+
+def parsuj_wiersz(komorki, znane_nazwy=None):
+    """Układ strony: ['1.', '25.09.2026 r. (piątek)', 'do godz. 23:00', '-', '-', 'Apteka ... Kraśnik, ul. X 1 tel. (81) 111 22 33']"""
+    if len(komorki) < 4:
+        return None
+    m = DATA_RE.search(komorki[1])
     if not m:
         return None
-    d = date(int(m.group(3)), int(m.group(2)), int(m.group(1)))
-    reszta = [k for k in komorki[1:] if k]
-    tel = godz = adres = None
-    nazwa_czesci = []
-    for k in reszta:
-        if tel is None and TEL_RE.fullmatch(k.strip()):
-            tel = k.strip()
-        elif godz is None and GODZ_RE.search(k) and len(k) < 30:
-            godz = k.strip()
-        elif adres is None and ADRES_RE.search(k) and not k.lower().startswith("apteka"):
-            adres = k.strip()
-        else:
-            nazwa_czesci.append(k)
-    if not (tel and godz and adres and nazwa_czesci):
+    ostatnia = komorki[-1]
+    a = APTEKA_RE.match(ostatnia)
+    if not a:
         return None
-    nazwa = re.sub(r"\s*\(.*?\)", "", nazwa_czesci[0]).strip()
-    if MIASTO.lower() not in adres.lower():
-        adres = f"{MIASTO}, {adres}"
-    return {"date": d.isoformat(), "hours": godz, "name": nazwa, "addr": adres, "phone": tel}
+    d = date(int(m.group(3)), int(m.group(2)), int(m.group(1)))
+    godziny = []
+    for k in komorki[2:-1]:
+        k = k.strip()
+        if k and k not in ("-", "–", "—"):
+            g = normalizuj_godziny(k)
+            if g not in godziny:
+                godziny.append(g)
+    if not godziny:
+        return None
+    telefon = a.group(3).strip()
+    nazwa = (znane_nazwy or {}).get(cyfry(telefon)) or czysta_nazwa(a.group(1))
+    return {"date": d.isoformat(), "hours": ", ".join(godziny), "name": nazwa,
+            "addr": a.group(2).strip(), "phone": telefon}
 
 
 def pobierz():
@@ -101,17 +125,18 @@ def zapisz(dane, sciezka):
 
 def main(plik=PLIK, html=None):
     html = html if html is not None else pobierz()
+    with open(plik, encoding="utf-8") as f:
+        dane = json.load(f)
+    znane = {cyfry(w["phone"]): w["name"] for w in dane["zintegrowane"].get(MIASTO, [])}
     p = Tabele()
     p.feed(html)
-    nowe = [w for w in (parsuj_wiersz(r) for r in p.wiersze) if w]
+    nowe = [w for w in (parsuj_wiersz(r, znane) for r in p.wiersze) if w]
     if not nowe:
         tekst = re.sub(r"\n\s*\n+", "\n", "".join(p.tekst))
         print("BŁĄD: nie rozpoznano żadnych dyżurów. Wiersze tabel:", p.wiersze[:5])
         print("Fragment tekstu strony:\n", tekst[:1500])
         sys.exit(1)
 
-    with open(plik, encoding="utf-8") as f:
-        dane = json.load(f)
     stare = {w["date"]: w for w in dane["zintegrowane"].get(MIASTO, [])}
     for w in nowe:
         stare[w["date"]] = w                      # nowe dane z urzędu mają pierwszeństwo
