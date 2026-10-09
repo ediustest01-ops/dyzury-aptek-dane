@@ -426,7 +426,21 @@
       {"date":"2026-10-05","hours":"do 23:00","name":"Apteka Słoneczna","addr":"Kraśnik, ul. Lubelska 56A","phone":"(81) 821 10 73"},
       {"date":"2026-10-06","hours":"do 23:00","name":"Apteka Nova","addr":"Kraśnik, ul. J. Kochanowskiego 1/2A","phone":"(81) 458 77 80"},
       {"date":"2026-10-07","hours":"do 23:00","name":"Całotygodniowa Apteka Familijna","addr":"Kraśnik, ul. T. Kościuszki 7","phone":"(81) 825 27 57"},
-      {"date":"2026-10-08","hours":"do 23:00","name":"Apteka ALCHEMIA","addr":"Kraśnik, ul. Sikorskiego 13","phone":"(81) 884 66 15"}
+      {"date":"2026-10-08","hours":"do 23:00","name":"Apteka ALCHEMIA","addr":"Kraśnik, ul. Sikorskiego 13","phone":"(81) 884 66 15"},
+      {"date":"2026-10-09","hours":"do 23:00","name":"Apteka „Rodzinna”","addr":"Kraśnik, ul. Lubelska 18","phone":"(81) 825 07 93"},
+      {"date":"2026-10-10","hours":"do 23:00","name":"Apteka Melisa Koło Kościoła","addr":"Kraśnik, ul. Ks. Zielińskiego 3","phone":"(81) 825 86 92"},
+      {"date":"2026-10-11","hours":"9:00–23:00","name":"Apteka ALCHEMIA","addr":"Kraśnik, ul. Sikorskiego 13","phone":"(81) 884 66 15"},
+      {"date":"2026-10-12","hours":"do 23:00","name":"Apteka NATURA","addr":"Kraśnik, ul. Urzędowska 44","phone":"(81) 825 04 50"},
+      {"date":"2026-10-13","hours":"do 23:00","name":"Apteka Melisa w Supersamie","addr":"Kraśnik, ul. Sikorskiego 7a","phone":"(81) 826 00 82"},
+      {"date":"2026-10-14","hours":"do 23:00","name":"Apteka \"Herba\"","addr":"Kraśnik, ul. A. Mickiewicza 1G","phone":"(81) 826 02 22"},
+      {"date":"2026-10-15","hours":"do 23:00","name":"Apteka Melisa Pod Pewexem","addr":"Kraśnik, ul. Dekutowskiego 6","phone":"(81) 825 44 19"},
+      {"date":"2026-10-16","hours":"do 23:00","name":"Apteka Słoneczna","addr":"Kraśnik, ul. Lubelska 56A","phone":"(81) 821 10 73"},
+      {"date":"2026-10-17","hours":"do 23:00","name":"Apteka Nova","addr":"Kraśnik, ul. J. Kochanowskiego 1/2A","phone":"(81) 458 77 80"},
+      {"date":"2026-10-18","hours":"9:00–23:00","name":"Apteka „Rodzinna”","addr":"Kraśnik, ul. Lubelska 18","phone":"(81) 825 07 93"},
+      {"date":"2026-10-19","hours":"do 23:00","name":"Całotygodniowa Apteka Familijna","addr":"Kraśnik, ul. T. Kościuszki 7","phone":"(81) 825 27 57"},
+      {"date":"2026-10-20","hours":"do 23:00","name":"Apteka ALCHEMIA","addr":"Kraśnik, ul. Sikorskiego 13","phone":"(81) 884 66 15"},
+      {"date":"2026-10-21","hours":"do 23:00","name":"Apteka „Rodzinna”","addr":"Kraśnik, ul. Lubelska 18","phone":"(81) 825 07 93"},
+      {"date":"2026-10-22","hours":"do 23:00","name":"Apteka Melisa Koło Kościoła","addr":"Kraśnik, ul. Ks. Zielińskiego 3","phone":"(81) 825 86 92"}
     ]
   }
 }
