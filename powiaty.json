@@ -413,7 +413,6 @@
   },
   "zintegrowane": {
     "Kraśnik": [
-      {"date":"2026-10-01","hours":"do 23:00","name":"Apteka Melisa w Supersamie","addr":"Kraśnik, ul. Sikorskiego 7a","phone":"(81) 826 00 82"},
       {"date":"2026-10-02","hours":"do 23:00","name":"Apteka \"Herba\"","addr":"Kraśnik, ul. A. Mickiewicza 1G","phone":"(81) 826 02 22"},
       {"date":"2026-10-03","hours":"do 23:00","name":"Apteka Melisa Pod Pewexem","addr":"Kraśnik, ul. Dekutowskiego 6","phone":"(81) 825 44 19"},
       {"date":"2026-10-04","hours":"9:00–23:00","name":"Całotygodniowa Apteka Familijna","addr":"Kraśnik, ul. T. Kościuszki 7","phone":"(81) 825 27 57"},
